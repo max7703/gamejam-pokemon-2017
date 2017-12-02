@@ -87,14 +87,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Assets\Scripts\BoardManager.cs" />
+    <Compile Include="Assets\Assets\Scripts\BoardCreator.cs" />
+    <Compile Include="Assets\Assets\Scripts\Corridor.cs" />
     <Compile Include="Assets\Assets\Scripts\Enemy.cs" />
+    <Compile Include="Assets\Assets\Scripts\FollowPlayer.cs" />
     <Compile Include="Assets\Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Assets\Scripts\IntRange.cs" />
     <Compile Include="Assets\Assets\Scripts\Loader.cs" />
     <Compile Include="Assets\Assets\Scripts\MainMenuManager.cs" />
     <Compile Include="Assets\Assets\Scripts\MenuStartManager.cs" />
     <Compile Include="Assets\Assets\Scripts\MovingObject.cs" />
     <Compile Include="Assets\Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Assets\Scripts\Room.cs" />
     <Compile Include="Assets\Assets\Scripts\SoundManager.cs" />
     <Compile Include="Assets\Assets\Scripts\TileWindow.cs" />
     <Compile Include="Assets\Assets\Scripts\Wall.cs" />

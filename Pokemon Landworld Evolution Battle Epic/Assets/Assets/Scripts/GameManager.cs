@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour {
 	public float levelStartDelay = 2f;
 	public float turnDelay = .1f;
 	public static GameManager instance = null;
-	public BoardManager boardScript;
 	public int playerHealthPoints = 100;
 	[HideInInspector] public bool playersTurn = true;
     public int score = 0;
@@ -30,7 +29,6 @@ public class GameManager : MonoBehaviour {
 
 		DontDestroyOnLoad (gameObject);
 		enemies = new List<Enemy> ();
-		boardScript = GetComponent<BoardManager> ();
 		InitGame ();
 	}
 
@@ -52,7 +50,6 @@ public class GameManager : MonoBehaviour {
 		Invoke ("HideLevelImage", levelStartDelay);
 
 		enemies.Clear ();
-		boardScript.SetupScene (level);
 	}
 
 	private void HideLevelImage()
