@@ -32,6 +32,7 @@ public class Enemy : MovingObject {
 		base.Start ();
 		posX = (int)this.transform.position.x;
 		posY = (int)this.transform.position.y;
+        moveTime = 0.05f;
 	}
 	public void setPath(int x1, int y1, int width, int height){
 		path [0].x = x1;

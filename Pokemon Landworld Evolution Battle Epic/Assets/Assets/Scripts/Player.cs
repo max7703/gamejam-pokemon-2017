@@ -78,7 +78,31 @@ public class Player : MovingObject {
 			vertical = 0;
 
 		if (horizontal != 0 || vertical != 0)
-			AttemptMove<Wall> (posX + horizontal,posY + vertical);
+        {
+            if(horizontal != 0)
+            {
+                if(horizontal>0)
+                {
+                    animator.SetTrigger("MoveRight");
+                }
+                else
+                {
+                    animator.SetTrigger("MoveLeft");
+                }
+            }
+            else
+            {
+                if (vertical > 0)
+                {
+                    animator.SetTrigger("MoveUp");
+                }
+                else
+                {
+                    animator.SetTrigger("MoveDown");
+                }
+            }
+            AttemptMove<Wall>(posX + horizontal, posY + vertical);
+        }
 
         CheckIfVictory();
     }
@@ -129,7 +153,7 @@ public class Player : MovingObject {
 	{
 		Wall hitWall = component as Wall;
 		hitWall.DamageWall (wallDamage);
-		animator.SetTrigger ("playerChop");
+		animator.SetTrigger ("Attack");
 	}
 
 	private void Restart()
@@ -139,7 +163,7 @@ public class Player : MovingObject {
 
 	public void LooseHealth (int loss)
 	{
-		animator.SetTrigger ("playerHit");
+		animator.SetTrigger ("GetHit");
         health -= loss;
 		healthText.text = "Health: " + health;
 		CheckIfGameOver ();
