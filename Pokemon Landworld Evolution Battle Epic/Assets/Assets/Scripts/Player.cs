@@ -8,8 +8,9 @@ public class Player : MovingObject {
 	public int pointsPerFood = 10;
 	public int pointsPerSoda = 20;
 	public float restartLevelDelay = 1f;
-	public Text foodText;
-	public AudioClip moveSound1;
+	public Text healthText;
+    public Text scoreText;
+    public AudioClip moveSound1;
 	public AudioClip moveSound2;
 	public AudioClip eatSound1;
 	public AudioClip eatSound2;
@@ -18,23 +19,25 @@ public class Player : MovingObject {
 	public AudioClip gameOverSound;
 
 	private Animator animator;
-	private int food;
+	private int health;
 	private Vector2 touchOrigin = -Vector2.one;
 
 	// Use this for initialization
 	protected override void Start () {
 		animator = GetComponent<Animator> ();
 
-		food = GameManager.instance.playerFoodPoints;
+        health = GameManager.instance.playerHealthPoints;
 
-		foodText.text = "Food: " + food;
+		healthText.text = "Health: " + health;
 
-		base.Start ();
+        scoreText.text = "Score: " + GameManager.instance.score;
+
+        base.Start ();
 	}
 
 	private void OnDisable()
 	{
-		GameManager.instance.playerFoodPoints = food;
+		GameManager.instance.playerHealthPoints = health;
 	}
 
 	// Update is called once per frame
@@ -44,8 +47,6 @@ public class Player : MovingObject {
 
 		int horizontal = 0;
 		int vertical = 0;
-
-#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
 
 		horizontal = (int)Input.GetAxisRaw ("Horizontal");
 		vertical = (int)Input.GetAxisRaw ("Vertical");
@@ -64,37 +65,16 @@ public class Player : MovingObject {
 		if (horizontal != 0)
 			vertical = 0;
 
-#else
-		if (Input.touchCount > 0)
-		{
-			Touch myTouch = Input.touches[0];
-
-			if (myTouch.phase == TouchPhase.Began)
-			{
-				touchOrigin = myTouch.position;
-			} else if (myTouch.phase == TouchPhase.Ended && touchOrigin.x >= 0)
-			{
-				Vector2 touchEnd = myTouch.position;
-				float x = touchEnd.x - touchOrigin.x;
-				float y = touchEnd.y - touchOrigin.y;
-				touchOrigin.x = -1;
-				if (Mathf.Abs(x) > Mathf.Abs(y))
-					horizontal = x > 0 ? 1 : -1;
-				else
-					vertical = y > 0 ? 1 : -1;
-			}
-		}
-
-#endif
-
 		if (horizontal != 0 || vertical != 0)
 			AttemptMove<Wall> (horizontal, vertical);
-	}
 
-	protected override void AttemptMove <T> (int xDir, int yDir)
+        CheckIfVictory();
+    }
+
+    protected override void AttemptMove <T> (int xDir, int yDir)
 	{
-		food--;
-		foodText.text = "Food: " + food;
+        health--;
+		healthText.text = "Health: " + health;
 
 		base.AttemptMove <T> (xDir, yDir);
 
@@ -114,17 +94,20 @@ public class Player : MovingObject {
 			Invoke ("Restart", restartLevelDelay);
 			enabled = false;
 		} else if (other.tag == "Food") {
-			food += pointsPerFood;
-			foodText.text = "+" + pointsPerFood + " Food: " + food;
+            health += pointsPerFood;
+            GameManager.instance.score += pointsPerFood;
+            healthText.text = "Health: " + health;
 			SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
 			other.gameObject.SetActive (false);
 		} else if (other.tag == "Soda") {
-			food += pointsPerSoda;
-			foodText.text = "+" + pointsPerSoda + " Food: " + food;
+            health += pointsPerSoda;
+            GameManager.instance.score += pointsPerSoda;
+            healthText.text = "Health: " + health;
 			SoundManager.instance.RandomizeSfx(drinkSound1, drinkSound2);
 			other.gameObject.SetActive (false);
 		}
-	}
+        scoreText.text = "Score: " + GameManager.instance.score;
+    }
 
 	protected override void OnCantMove <T> (T component)
 	{
@@ -141,17 +124,27 @@ public class Player : MovingObject {
 	public void LoseFood (int loss)
 	{
 		animator.SetTrigger ("playerHit");
-		food -= loss;
-		foodText.text = "-" + loss + " Food: " + food;
+        health -= loss;
+		healthText.text = "Health: " + health;
 		CheckIfGameOver ();
 	}
 
 	private void CheckIfGameOver()
 	{
-		if (food <= 0) {
+		if (health <= 0) {
 			SoundManager.instance.PlaySingle(gameOverSound);
 			SoundManager.instance.musicSource.Stop();
 			GameManager.instance.GameOver ();
 		}
 	}
+
+    private void CheckIfVictory()
+    {
+        if (GameManager.instance.level >= 10)
+        {
+            //SoundManager.instance.PlaySingle(victorySound);
+            SoundManager.instance.musicSource.Stop();
+            GameManager.instance.Victory();
+        }
+    }
 }

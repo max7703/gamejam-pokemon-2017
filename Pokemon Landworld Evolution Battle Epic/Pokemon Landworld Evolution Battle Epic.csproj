@@ -83,6 +83,7 @@
     <Compile Include="Assets\Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Assets\Scripts\Loader.cs" />
     <Compile Include="Assets\Assets\Scripts\MainMenuManager.cs" />
+    <Compile Include="Assets\Assets\Scripts\MenuStartManager.cs" />
     <Compile Include="Assets\Assets\Scripts\MovingObject.cs" />
     <Compile Include="Assets\Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Assets\Scripts\SoundManager.cs" />

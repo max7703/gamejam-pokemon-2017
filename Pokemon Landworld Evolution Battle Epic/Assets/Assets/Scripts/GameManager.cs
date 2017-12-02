@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour {
 
@@ -9,12 +10,13 @@ public class GameManager : MonoBehaviour {
 	public float turnDelay = .1f;
 	public static GameManager instance = null;
 	public BoardManager boardScript;
-	public int playerFoodPoints = 100;
+	public int playerHealthPoints = 100;
 	[HideInInspector] public bool playersTurn = true;
+    public int score = 0;
 
 	private Text levelText;
 	private GameObject levelImage;
-	private int level = 1;
+	public int level = 0;
 	private List<Enemy> enemies;
 	private bool enemiesMoving;
 	private bool doingSetup;
@@ -61,8 +63,9 @@ public class GameManager : MonoBehaviour {
 
 	public void GameOver()
 	{
-		levelText.text = "After " + level + " days, you starved.";
-		levelImage.SetActive (true);
+        //levelText.text = "After " + level + " days, you starved.";
+        levelText.text = "Game Over";
+        levelImage.SetActive (true);
 		enabled = false;
 	}
 	
@@ -95,4 +98,11 @@ public class GameManager : MonoBehaviour {
 		playersTurn = true;
 		enemiesMoving = false;
 	}
+
+    public void Victory()
+    {
+        levelText.text = "Victory !!!\n Score:" + score;
+        levelImage.SetActive(true);
+        //Time.timeScale = 0;
+    }
 }
