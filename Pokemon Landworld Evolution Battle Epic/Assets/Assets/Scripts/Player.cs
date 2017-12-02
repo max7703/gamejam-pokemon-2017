@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MovingObject {
 
@@ -8,8 +9,8 @@ public class Player : MovingObject {
 	public int pointsPerFood = 10;
 	public int pointsPerSoda = 20;
 	public float restartLevelDelay = 1f;
-	public Text healthText;
-    public Text scoreText;
+	private Text healthText;
+    private Text scoreText;
     public AudioClip moveSound1;
 	public AudioClip moveSound2;
 	public AudioClip eatSound1;
@@ -25,6 +26,9 @@ public class Player : MovingObject {
 	// Use this for initialization
 	protected override void Start () {
 		animator = GetComponent<Animator> ();
+
+        healthText = GameObject.Find("HealthText").GetComponent<Text>();
+        scoreText = GameObject.Find("ScoreText").GetComponent<Text>();
 
         health = GameManager.instance.playerHealthPoints;
 
@@ -74,6 +78,8 @@ public class Player : MovingObject {
     protected override void AttemptMove <T> (int xDir, int yDir)
 	{
         health--;
+        Debug.Log(health);
+
 		healthText.text = "Health: " + health;
 
 		base.AttemptMove <T> (xDir, yDir);
@@ -96,16 +102,15 @@ public class Player : MovingObject {
 		} else if (other.tag == "Food") {
             health += pointsPerFood;
             GameManager.instance.score += pointsPerFood;
-            healthText.text = "Health: " + health;
 			SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
 			other.gameObject.SetActive (false);
 		} else if (other.tag == "Soda") {
             health += pointsPerSoda;
             GameManager.instance.score += pointsPerSoda;
-            healthText.text = "Health: " + health;
 			SoundManager.instance.RandomizeSfx(drinkSound1, drinkSound2);
 			other.gameObject.SetActive (false);
 		}
+        healthText.text = "Health: " + health;
         scoreText.text = "Score: " + GameManager.instance.score;
     }
 
@@ -118,8 +123,8 @@ public class Player : MovingObject {
 
 	private void Restart()
 	{
-		Application.LoadLevel (Application.loadedLevel);
-	}
+        SceneManager.LoadScene(1);
+    }
 
 	public void LoseFood (int loss)
 	{
