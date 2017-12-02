@@ -6,7 +6,7 @@ public class BoardCreator : MonoBehaviour
     // The type of tile that will be laid in a specific position.
     public enum TileType
     {
-        Wall, Floor,
+        Wall, Floor, Food
     }
 
 
@@ -19,13 +19,15 @@ public class BoardCreator : MonoBehaviour
     public GameObject[] floorTiles;                           // An array of floor tile prefabs.
     public GameObject[] wallTiles;                            // An array of wall tile prefabs.
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
-    public GameObject[] foodTiles;
+    public GameObject[] foodTiles;							  // An array of food tile prefabs.
     public GameObject player;
+	public GameObject[] enemyPrefabs;
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
     private Corridor[] corridors;                             // All the corridors that connect the rooms.
     private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
+	//public 
 
 
     private void Start()
@@ -72,7 +74,7 @@ public class BoardCreator : MonoBehaviour
         corridors[0] = new Corridor();
 
         // Setup the first room, there is no previous corridor so we do not use one.
-        rooms[0].SetupRoom(roomWidth, roomHeight, columns, rows);
+        rooms[0].SetupRoom(roomWidth, roomHeight, columns, rows, enemyPrefabs);
 
         // Setup the first corridor using the first room.
         corridors[0].SetupCorridor(rooms[0], corridorLength, roomWidth, roomHeight, columns, rows, true);
@@ -122,7 +124,11 @@ public class BoardCreator : MonoBehaviour
                 {
                     int yCoord = currentRoom.yPos + k;
 
-                    // The coordinates in the jagged array are based on the room's position and it's width and height.
+					// The coordinates in the jagged array are based on the room's position and it's width and height.
+					// 5% chance for each tile to be food
+					if(Random.value <= 0.05)
+						tiles[xCoord][yCoord] = TileType.Food;
+					else
                     tiles[xCoord][yCoord] = TileType.Floor;
                 }
             }
@@ -180,11 +186,15 @@ public class BoardCreator : MonoBehaviour
                 InstantiateFromArray(floorTiles, i, j);
 
                 // If the tile type is Wall...
-                if (tiles[i][j] == TileType.Wall)
-                {
-                    // ... instantiate a wall over the top.
-                    InstantiateFromArray(wallTiles, i, j);
-                }
+				if (tiles [i] [j] == TileType.Wall) 
+				{
+					// ... instantiate a wall over the top.
+					InstantiateFromArray (wallTiles, i, j);
+				} 
+				else if (tiles [i] [j] == TileType.Food) 
+				{
+					InstantiateFromArray (foodTiles, i, j);
+				}
             }
         }
     }

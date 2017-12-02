@@ -3,6 +3,7 @@ using System.Collections;
 
 public abstract class MovingObject : MonoBehaviour
 {
+	public bool canMove;
 	public float moveTime = 0.1f;
 	public LayerMask blockingLayer;
 
@@ -17,11 +18,10 @@ public abstract class MovingObject : MonoBehaviour
 		inverseMoveTime = 1f / moveTime;
 	}
 
-	protected bool Move (int xDir, int yDir, out RaycastHit2D hit)
+	protected bool Move (int xPos, int yPos, out RaycastHit2D hit)
 	{
 		Vector2 start = transform.position;
-		Vector2 end = start + new Vector2 (xDir, yDir);
-
+		Vector2 end = new Vector2 (xPos, yPos);
 		boxCollider.enabled = false;
 		hit = Physics2D.Linecast (start, end, blockingLayer);
 		boxCollider.enabled = true;
@@ -30,7 +30,6 @@ public abstract class MovingObject : MonoBehaviour
 			StartCoroutine (SmoothMovement (end));
 			return true;
 		}
-
 		return false;
 	}
 
@@ -46,11 +45,11 @@ public abstract class MovingObject : MonoBehaviour
 		}
 	}
 
-	protected virtual void AttemptMove <T> (int xDir, int yDir)
+	protected virtual void AttemptMove <T> (int xPos, int yPos)
 		where T : Component
 	{
 		RaycastHit2D hit;
-		bool canMove = Move (xDir, yDir, out hit);
+		canMove = Move (xPos, yPos, out hit);
 
 		if (hit.transform == null)
 			return;

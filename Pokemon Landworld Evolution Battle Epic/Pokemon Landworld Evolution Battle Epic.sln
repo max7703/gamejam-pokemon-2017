@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2017
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokemon Landworld Evolution Battle Epic", "Pokemon Landworld Evolution Battle Epic.csproj", "{38EC9BB7-D33A-9240-8A38-689F9D5CD83E}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokemon Landworld Evolution Battle Epic", "Assembly-CSharp.csproj", "{66E5B4EE-E5AC-8631-C7FE-A39313F4821C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,12 +9,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{38EC9BB7-D33A-9240-8A38-689F9D5CD83E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38EC9BB7-D33A-9240-8A38-689F9D5CD83E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38EC9BB7-D33A-9240-8A38-689F9D5CD83E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38EC9BB7-D33A-9240-8A38-689F9D5CD83E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66E5B4EE-E5AC-8631-C7FE-A39313F4821C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66E5B4EE-E5AC-8631-C7FE-A39313F4821C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66E5B4EE-E5AC-8631-C7FE-A39313F4821C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66E5B4EE-E5AC-8631-C7FE-A39313F4821C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

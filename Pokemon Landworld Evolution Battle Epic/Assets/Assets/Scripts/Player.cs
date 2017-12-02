@@ -23,6 +23,9 @@ public class Player : MovingObject {
 	private int health;
 	private Vector2 touchOrigin = -Vector2.one;
 
+	public int posX;
+	public int posY;
+
 	// Use this for initialization
 	protected override void Start () {
 		animator = GetComponent<Animator> ();
@@ -35,6 +38,8 @@ public class Player : MovingObject {
 		healthText.text = "Health: " + health;
 
         scoreText.text = "Score: " + GameManager.instance.score;
+		posX = (int)this.transform.position.x;
+		posY = (int)this.transform.position.y;
 
         base.Start ();
 	}
@@ -70,22 +75,24 @@ public class Player : MovingObject {
 			vertical = 0;
 
 		if (horizontal != 0 || vertical != 0)
-			AttemptMove<Wall> (horizontal, vertical);
+			AttemptMove<Wall> (posX + horizontal,posY + vertical);
 
         CheckIfVictory();
     }
 
-    protected override void AttemptMove <T> (int xDir, int yDir)
+    protected override void AttemptMove <T> (int xPos, int yPos)
 	{
         health--;
         Debug.Log(health);
 
 		healthText.text = "Health: " + health;
 
-		base.AttemptMove <T> (xDir, yDir);
+		base.AttemptMove <T> (xPos, yPos);
 
 		RaycastHit2D hit;
-		if (Move (xDir, yDir, out hit)) {
+		if (Move ( xPos, yPos, out hit)) {
+			posX = xPos;
+			posY = yPos;
 			SoundManager.instance.RandomizeSfx (moveSound1, moveSound2);
 		}
 
@@ -126,7 +133,7 @@ public class Player : MovingObject {
         SceneManager.LoadScene(1);
     }
 
-	public void LoseFood (int loss)
+	public void LooseHealth (int loss)
 	{
 		animator.SetTrigger ("playerHit");
         health -= loss;
