@@ -21,7 +21,8 @@ public class Player : MovingObject {
 
 	private Animator animator;
 	private int health;
-	private Vector2 touchOrigin = -Vector2.one;
+    private int score;
+    private Vector2 touchOrigin = -Vector2.one;
 
 	public int posX;
 	public int posY;
@@ -34,10 +35,11 @@ public class Player : MovingObject {
         scoreText = GameObject.Find("ScoreText").GetComponent<Text>();
 
         health = GameManager.instance.playerHealthPoints;
+        score = GameManager.instance.score;
 
-		healthText.text = "Health: " + health;
+        healthText.text = "Health: " + health;
 
-        scoreText.text = "Score: " + GameManager.instance.score;
+        //scoreText.text = "Score: " + GameManager.instance.score;
 		posX = (int)this.transform.position.x;
 		posY = (int)this.transform.position.y;
 
@@ -46,7 +48,8 @@ public class Player : MovingObject {
 
 	private void OnDisable()
 	{
-		GameManager.instance.playerHealthPoints = health;
+        GameManager.instance.score = score;
+        GameManager.instance.playerHealthPoints = health;
 	}
 
 	// Update is called once per frame
@@ -83,11 +86,12 @@ public class Player : MovingObject {
     protected override void AttemptMove <T> (int xPos, int yPos)
 	{
         health--;
-        Debug.Log(health);
 
 		healthText.text = "Health: " + health;
 
-		base.AttemptMove <T> (xPos, yPos);
+        scoreText.text = "Score: " + score;
+
+        base.AttemptMove <T> (xPos, yPos);
 
 		RaycastHit2D hit;
 		if (Move ( xPos, yPos, out hit)) {
@@ -108,17 +112,17 @@ public class Player : MovingObject {
 			enabled = false;
 		} else if (other.tag == "Food") {
             health += pointsPerFood;
-            GameManager.instance.score += pointsPerFood;
+            score += pointsPerFood;
 			SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
 			other.gameObject.SetActive (false);
 		} else if (other.tag == "Soda") {
             health += pointsPerSoda;
-            GameManager.instance.score += pointsPerSoda;
+            score += pointsPerSoda;
 			SoundManager.instance.RandomizeSfx(drinkSound1, drinkSound2);
 			other.gameObject.SetActive (false);
 		}
         healthText.text = "Health: " + health;
-        scoreText.text = "Score: " + GameManager.instance.score;
+        scoreText.text = "Score: " + score;
     }
 
 	protected override void OnCantMove <T> (T component)
@@ -152,7 +156,7 @@ public class Player : MovingObject {
 
     private void CheckIfVictory()
     {
-        if (GameManager.instance.level >= 10)
+        if (score >= 100)
         {
             //SoundManager.instance.PlaySingle(victorySound);
             SoundManager.instance.musicSource.Stop();

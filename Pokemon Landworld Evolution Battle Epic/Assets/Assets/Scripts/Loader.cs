@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Loader : MonoBehaviour {
 
@@ -11,4 +12,9 @@ public class Loader : MonoBehaviour {
 			Instantiate (gameManager);
 	
 	}
+
+    public void LoadLevel(string level)
+    {
+        SceneManager.LoadScene(level);
+    }
 }

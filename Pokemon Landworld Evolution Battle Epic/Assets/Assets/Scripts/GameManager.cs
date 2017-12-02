@@ -17,7 +17,8 @@ public class GameManager : MonoBehaviour {
 	private GameObject levelImage;
 	public int level = 0;
 	private List<Enemy> enemies;
-	private bool enemiesMoving;
+    private GameObject buttonRestart;
+    private bool enemiesMoving;
 	private bool doingSetup;
 
 	// Use this for initialization
@@ -43,9 +44,12 @@ public class GameManager : MonoBehaviour {
 	{
 		doingSetup = true;
 
-		levelImage = GameObject.Find ("LevelImage");
+        buttonRestart = GameObject.Find("RestartButton");
+        buttonRestart.SetActive(false);
+
+        levelImage = GameObject.Find ("LevelImage");
 		levelText = GameObject.Find ("LevelText").GetComponent<Text> ();
-		levelText.text = "Day " + level;
+		levelText.text = "Cave";
 		levelImage.SetActive (true);
 		Invoke ("HideLevelImage", levelStartDelay);
 
@@ -60,7 +64,7 @@ public class GameManager : MonoBehaviour {
 
 	public void GameOver()
 	{
-        //levelText.text = "After " + level + " days, you starved.";
+        buttonRestart.SetActive(true);
         levelText.text = "Game Over";
         levelImage.SetActive (true);
 		enabled = false;
@@ -98,7 +102,8 @@ public class GameManager : MonoBehaviour {
 
     public void Victory()
     {
-        levelText.text = "Victory !!!\n Score:" + score;
+        buttonRestart.SetActive(true);
+        levelText.text = "Victory !!!";
         levelImage.SetActive(true);
         //Time.timeScale = 0;
     }

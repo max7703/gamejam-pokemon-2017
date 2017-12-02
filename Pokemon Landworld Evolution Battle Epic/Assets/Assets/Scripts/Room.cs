@@ -26,9 +26,9 @@ public class Room {
 				
 	}
 
-	// This is an overload of the SetupRoom function and has a corridor parameter that represents the corridor entering the room.
-	public void SetupRoom(IntRange widthRange, IntRange heightRange, int columns, int rows, Corridor corridor)
-	{
+    // This is an overload of the SetupRoom function and has a corridor parameter that represents the corridor entering the room.
+    public void SetupRoom(IntRange widthRange, IntRange heightRange, int columns, int rows, Corridor corridor, GameObject[] enemyPrefabs, bool spawn)
+    {
 		// Set the entering corridor direction.
 		enteringCorridor = corridor.direction;
 
@@ -76,6 +76,13 @@ public class Room {
 			yPos = Mathf.Clamp(yPos, 0, rows - roomHeight);
 			break;
 		}
+        if (spawn)
+        {
+            int randomIndex = Random.Range(0, enemyPrefabs.Length);
+            Vector3 position = new Vector3(xPos, yPos, 0f);
+            GameObject enemy = Object.Instantiate(enemyPrefabs[randomIndex], position, Quaternion.identity);
+            enemy.GetComponent<Enemy>().setPath((int)xPos, (int)yPos, (int)roomWidth, (int)roomHeight);
+        }
 
-	}
+    }
 }

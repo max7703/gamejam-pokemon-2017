@@ -85,7 +85,10 @@ public class BoardCreator : MonoBehaviour
             rooms[i] = new Room();
 
             // Setup the room based on the previous corridor.
-            rooms[i].SetupRoom(roomWidth, roomHeight, columns, rows, corridors[i - 1]);
+            if (i != rooms.Length - 1)
+                rooms[i].SetupRoom(roomWidth, roomHeight, columns, rows, corridors[i - 1], enemyPrefabs, true);
+            else
+                rooms[i].SetupRoom(roomWidth, roomHeight, columns, rows, corridors[i - 1], enemyPrefabs, false);
 
             // If we haven't reached the end of the corridors array...
             if (i < corridors.Length)
