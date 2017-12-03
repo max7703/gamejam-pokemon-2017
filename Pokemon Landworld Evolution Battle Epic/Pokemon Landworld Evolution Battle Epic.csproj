@@ -89,6 +89,7 @@
     <Compile Include="Assets\Assets\Scripts\MenuStartManager.cs" />
     <Compile Include="Assets\Assets\Scripts\MovingObject.cs" />
     <Compile Include="Assets\Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Assets\Scripts\PlayerMoveInStartPlain.cs" />
     <Compile Include="Assets\Assets\Scripts\Point.cs" />
     <Compile Include="Assets\Assets\Scripts\Room.cs" />
     <Compile Include="Assets\Assets\Scripts\SoundManager.cs" />

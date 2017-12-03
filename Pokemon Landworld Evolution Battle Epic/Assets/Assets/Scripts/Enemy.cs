@@ -81,7 +81,7 @@ public class Enemy : MovingObject {
 
 		hitPlayer.LooseHealth (playerDamage);
 
-		animator.SetTrigger ("enemyAttack");
+		animator.SetTrigger ("Attack");
 
 		SoundManager.instance.RandomizeSfx (enemyAttack1, enemyAttack2);
 	}
