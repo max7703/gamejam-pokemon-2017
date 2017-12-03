@@ -29,15 +29,9 @@ public class GameManager : MonoBehaviour {
 		else if (instance != this)
 			Destroy (gameObject);
 
-		DontDestroyOnLoad (gameObject);
-		enemies = new List<Enemy> ();
-		InitGame ();
-	}
-
-	void OnLevelWasLoaded (int index)
-	{
-		level++;
-
+        //DontDestroyOnLoad(gameObject);
+        ////Destroy(gameObject);
+        enemies = new List<Enemy> ();
 		InitGame ();
 	}
 
@@ -52,7 +46,6 @@ public class GameManager : MonoBehaviour {
 		Invoke ("HideLevelImage", levelStartDelay);
 
 		enemies.Clear ();
-
 
         buttonRestart = GameObject.Find("RestartButton");
         buttonRestart.SetActive(false);
@@ -70,6 +63,7 @@ public class GameManager : MonoBehaviour {
         levelText.text = "Game Over";
         levelImage.SetActive (true);
 		enabled = false;
+        Time.timeScale = 0;
         //SceneManager.LoadScene("Main");
     }
 	
@@ -108,7 +102,7 @@ public class GameManager : MonoBehaviour {
         buttonRestart.SetActive(true);
         levelText.text = "Victory !!!";
         levelImage.SetActive(true);
-        //Time.timeScale = 0;
+        Time.timeScale = 0;
         //SceneManager.LoadScene("Main");
     }
 }

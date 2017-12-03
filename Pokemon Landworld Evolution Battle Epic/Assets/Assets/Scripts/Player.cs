@@ -86,7 +86,7 @@ public class Player : MovingObject {
                 {
                     animator.SetTrigger("MoveRight");
                 }
-                else
+                else if(horizontal < 0)
                 {
                     animator.SetTrigger("MoveLeft");
                 }
@@ -97,12 +97,16 @@ public class Player : MovingObject {
                 {
                     animator.SetTrigger("MoveUp");
                 }
-                else
+                else if(vertical < 0)
                 {
                     animator.SetTrigger("MoveDown");
                 }
             }
             AttemptMove<Wall>(posX + horizontal, posY + vertical);
+        }
+        else
+        {
+            animator.SetTrigger("DontMove");
         }
 
         CheckIfVictory();
