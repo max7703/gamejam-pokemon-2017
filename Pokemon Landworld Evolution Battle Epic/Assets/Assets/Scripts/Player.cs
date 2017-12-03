@@ -27,8 +27,8 @@ public class Player : MovingObject {
 	public int posX;
 	public int posY;
 
-	// Use this for initialization
-	protected override void Start () {
+    // Use this for initialization
+    protected override void Start () {
 		animator = GetComponent<Animator> ();
 
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
@@ -52,12 +52,12 @@ public class Player : MovingObject {
         GameManager.instance.playerHealthPoints = health;
 	}
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
 		if (!GameManager.instance.playersTurn)
 			return;
 
-		int horizontal = 0;
+        int horizontal = 0;
 		int vertical = 0;
 
 		horizontal = (int)Input.GetAxisRaw ("Horizontal");
@@ -65,6 +65,7 @@ public class Player : MovingObject {
 
 		if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) {
 			var posVec = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //Debug.Log(Input.mousePosition);
 			var x = Mathf.RoundToInt(posVec.x) - transform.position.x;
 			var y = Mathf.RoundToInt(posVec.y) - transform.position.y;
 			if (Mathf.Abs(x) > Mathf.Abs(y)) {
@@ -158,7 +159,7 @@ public class Player : MovingObject {
 
 	private void Restart()
 	{
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("Main");
     }
 
 	public void LooseHealth (int loss)

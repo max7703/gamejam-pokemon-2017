@@ -3,118 +3,94 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class PlayerMoveInStartPlain : MovingObject
+public class PlayerMoveInStartPlain : MonoBehaviour
 {
 
-    public int wallDamage = 1;
-    public AudioClip moveSound1;
-    public AudioClip moveSound2;
-    public AudioClip eatSound1;
-    public AudioClip eatSound2;
-    public AudioClip drinkSound1;
-    public AudioClip drinkSound2;
-    public AudioClip gameOverSound;
-
-    private Animator animator;
-    private Vector2 touchOrigin = -Vector2.one;
-
-    public int posX;
-    public int posY;
-
-    // Use this for initialization
-    protected override void Start()
+    private float moveSpeed = 1f;
+    private float gridSize = 0.24f;
+    private enum Orientation
     {
-        animator = GetComponent<Animator>();
+        Horizontal,
+        Vertical
+    };
+    private Orientation gridOrientation = Orientation.Horizontal;
+    private bool allowDiagonals = false;
+    private bool correctDiagonalSpeed = true;
+    private Vector2 input;
+    private bool isMoving = false;
+    private Vector3 startPosition;
+    private Vector3 endPosition;
+    private float t;
+    private float factor;
 
-        //scoreText.text = "Score: " + GameManager.instance.score;
-        posX = (int)this.transform.position.x;
-        posY = (int)this.transform.position.y;
-
-        base.Start();
-    }
-
-    // Update is called once per frame
-    void Update()
+    public void Update()
     {
-        int horizontal = 0;
-        int vertical = 0;
-
-        horizontal = (int)Input.GetAxisRaw("Horizontal");
-        vertical = (int)Input.GetAxisRaw("Vertical");
-
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+        if (!isMoving)
         {
-            var posVec = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var x = Mathf.RoundToInt(posVec.x) - transform.position.x;
-            var y = Mathf.RoundToInt(posVec.y) - transform.position.y;
-            if (Mathf.Abs(x) > Mathf.Abs(y))
+            input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            if (!allowDiagonals)
             {
-                horizontal = x > 0 ? 1 : -1;
-            }
-            else
-            {
-                vertical = y > 0 ? 1 : -1;
-            }
-        }
-
-        if (horizontal != 0)
-            vertical = 0;
-
-        if (horizontal != 0 || vertical != 0)
-        {
-            if (horizontal != 0)
-            {
-                if (horizontal > 0)
+                if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
                 {
-                    animator.SetTrigger("MoveRight");
+                    gridOrientation = Orientation.Horizontal;
+                    input.y = 0;
                 }
                 else
                 {
-                    animator.SetTrigger("MoveLeft");
+                    gridOrientation = Orientation.Vertical;
+                    input.x = 0;
                 }
             }
-            else
+
+            if (input != Vector2.zero)
             {
-                if (vertical > 0)
-                {
-                    animator.SetTrigger("MoveUp");
-                }
-                else
-                {
-                    animator.SetTrigger("MoveDown");
-                }
+                StartCoroutine(move(transform));
             }
-            AttemptMove<Wall>(posX + horizontal, posY + vertical);
-        }
-    }
-
-    protected override void AttemptMove<T>(int xPos, int yPos)
-    {
-        base.AttemptMove<T>(xPos, yPos);
-
-        RaycastHit2D hit;
-        if (Move(xPos, yPos, out hit))
-        {
-            posX = xPos;
-            posY = yPos;
-            SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-
+        if (other.tag == "Cave")
+        {
+            SceneManager.LoadScene("Main");
+        }
     }
 
-    protected override void OnCantMove<T>(T component)
+    public IEnumerator move(Transform transform)
     {
-        Wall hitWall = component as Wall;
-        hitWall.DamageWall(wallDamage);
-        animator.SetTrigger("Attack");
-    }
+        isMoving = true;
+        startPosition = transform.position;
+        t = 0;
 
-    private void Restart()
-    {
-        SceneManager.LoadScene(1);
+        if (gridOrientation == Orientation.Horizontal)
+        {
+            endPosition = new Vector3(startPosition.x + System.Math.Sign(input.x) * gridSize,
+                startPosition.y, startPosition.z + System.Math.Sign(input.y) * gridSize);
+        }
+        else
+        {
+            endPosition = new Vector3(startPosition.x + System.Math.Sign(input.x) * gridSize,
+                startPosition.y + System.Math.Sign(input.y) * gridSize, startPosition.z);
+        }
+
+        if (allowDiagonals && correctDiagonalSpeed && input.x != 0 && input.y != 0)
+        {
+            factor = 0.7071f;
+        }
+        else
+        {
+            factor = 1f;
+        }
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * (moveSpeed / gridSize) * factor;
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            yield return null;
+        }
+
+        isMoving = false;
+        yield return 0;
     }
 }

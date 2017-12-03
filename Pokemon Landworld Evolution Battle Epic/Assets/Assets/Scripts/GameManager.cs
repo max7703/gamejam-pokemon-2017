@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -44,9 +45,6 @@ public class GameManager : MonoBehaviour {
 	{
 		doingSetup = true;
 
-        buttonRestart = GameObject.Find("RestartButton");
-        buttonRestart.SetActive(false);
-
         levelImage = GameObject.Find ("LevelImage");
 		levelText = GameObject.Find ("LevelText").GetComponent<Text> ();
 		levelText.text = "Cave";
@@ -54,7 +52,11 @@ public class GameManager : MonoBehaviour {
 		Invoke ("HideLevelImage", levelStartDelay);
 
 		enemies.Clear ();
-	}
+
+
+        buttonRestart = GameObject.Find("RestartButton");
+        buttonRestart.SetActive(false);
+    }
 
 	private void HideLevelImage()
 	{
@@ -68,7 +70,8 @@ public class GameManager : MonoBehaviour {
         levelText.text = "Game Over";
         levelImage.SetActive (true);
 		enabled = false;
-	}
+        //SceneManager.LoadScene("Main");
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -106,5 +109,6 @@ public class GameManager : MonoBehaviour {
         levelText.text = "Victory !!!";
         levelImage.SetActive(true);
         //Time.timeScale = 0;
+        //SceneManager.LoadScene("Main");
     }
 }
