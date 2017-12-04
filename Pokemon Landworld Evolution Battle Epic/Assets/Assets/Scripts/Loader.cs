@@ -10,11 +10,11 @@ public class Loader : MonoBehaviour {
 	void Awake () {
 		if (GameManager.instance == null)
 			Instantiate (gameManager);
-	
 	}
 
     public void LoadLevel(string level)
     {
         SceneManager.LoadScene(level);
+        //SoundManager.instance.efxSource.Stop();
     }
 }

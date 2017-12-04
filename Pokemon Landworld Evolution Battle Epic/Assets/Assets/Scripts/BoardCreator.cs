@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+public enum TileType
+{
+	Wall, Floor, Food
+}
+
 public class BoardCreator : MonoBehaviour
 {
     // The type of tile that will be laid in a specific position.
-    public enum TileType
-    {
-        Wall, Floor, Food
-    }
+
 
 
     public int columns = 100;                                 // The number of columns on the board (how wide it will be).
@@ -46,6 +48,10 @@ public class BoardCreator : MonoBehaviour
         InstantiateOuterWalls();
     }
 
+	public TileType[][] getMap()
+	{
+		return tiles;
+	}
 
     void SetupTilesArray()
     {

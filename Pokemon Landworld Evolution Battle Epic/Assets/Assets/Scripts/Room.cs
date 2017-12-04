@@ -78,10 +78,13 @@ public class Room {
 		}
         if (spawn)
         {
-            int randomIndex = Random.Range(0, enemyPrefabs.Length);
-            Vector3 position = new Vector3(xPos, yPos, 0f);
-            GameObject enemy = Object.Instantiate(enemyPrefabs[randomIndex], position, Quaternion.identity);
-            enemy.GetComponent<Enemy>().setPath((int)xPos, (int)yPos, (int)roomWidth, (int)roomHeight);
+            if (Random.value <= 0.5)
+            {
+                int randomIndex = Random.Range(0, enemyPrefabs.Length);
+                Vector3 position = new Vector3(xPos, yPos, 0f);
+                GameObject enemy = Object.Instantiate(enemyPrefabs[randomIndex], position, Quaternion.identity);
+                enemy.GetComponent<Enemy>().setPath((int)xPos, (int)yPos, (int)roomWidth, (int)roomHeight);
+            }
         }
 
     }

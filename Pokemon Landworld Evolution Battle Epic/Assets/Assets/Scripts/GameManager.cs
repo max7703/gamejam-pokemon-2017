@@ -13,11 +13,12 @@ public class GameManager : MonoBehaviour {
 	public int playerHealthPoints = 100;
 	[HideInInspector] public bool playersTurn = true;
     public int score = 0;
+	private Vector3 posButton;
 
 	private Text levelText;
 	private GameObject levelImage;
 	public int level = 0;
-	private List<Enemy> enemies;
+	public List<Enemy> enemies;
     private GameObject buttonRestart;
     private bool enemiesMoving;
 	private bool doingSetup;
@@ -29,9 +30,19 @@ public class GameManager : MonoBehaviour {
 		else if (instance != this)
 			Destroy (gameObject);
 
-        //DontDestroyOnLoad(gameObject);
-        ////Destroy(gameObject);
-        enemies = new List<Enemy> ();
+		//DontDestroyOnLoad (gameObject);
+		enemies = new List<Enemy> ();
+		InitGame ();
+	}
+
+	public List<Enemy> getEnemies () {
+		return enemies;
+	}
+
+	void OnLevelWasLoaded (int index)
+	{
+		level++;
+
 		InitGame ();
 	}
 
@@ -47,8 +58,10 @@ public class GameManager : MonoBehaviour {
 
 		enemies.Clear ();
 
+
         buttonRestart = GameObject.Find("RestartButton");
-        buttonRestart.SetActive(false);
+		posButton = buttonRestart.transform.position;
+		buttonRestart.transform.position = new Vector3 (-25, -25, -25);
     }
 
 	private void HideLevelImage()
@@ -59,11 +72,10 @@ public class GameManager : MonoBehaviour {
 
 	public void GameOver()
 	{
-        buttonRestart.SetActive(true);
+		buttonRestart.transform.position = posButton;
         levelText.text = "Game Over";
         levelImage.SetActive (true);
 		enabled = false;
-        Time.timeScale = 0;
         //SceneManager.LoadScene("Main");
     }
 	
@@ -99,7 +111,7 @@ public class GameManager : MonoBehaviour {
 
     public void Victory()
     {
-        buttonRestart.SetActive(true);
+		buttonRestart.transform.position = posButton;
         levelText.text = "Victory !!!";
         levelImage.SetActive(true);
         Time.timeScale = 0;
