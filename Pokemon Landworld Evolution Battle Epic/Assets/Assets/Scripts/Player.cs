@@ -31,6 +31,7 @@ public class Player : MovingObject {
     public AudioClip drinkSound1;
     public AudioClip drinkSound2;
     public AudioClip gameOverSound;
+    public AudioClip victorySound;
 
     private Animator animator;
     private int health;
@@ -45,7 +46,6 @@ public class Player : MovingObject {
 
     Vector2 follow_simple(Vector2 start, Vector2 target, TileType[][] map)
     {
-      
         //file des éléments en attente de traitement
         Queue queue = new Queue();
         //map des parents pour chaque case visitée
@@ -59,10 +59,8 @@ public class Player : MovingObject {
         queue.Enqueue(start);
         bool found = false;
         //tant que la file est pas vide et que l'on a pas trouvé de chemin
-       
         while (queue.Count > 0 && !found)
         {
-           
             //on défile le premier élément et on le récupère
             Vector2 curr = (Vector2)queue.Dequeue();
             //on enfile les voisins si ce ne sont pas des murs et qu'ils n'ont pas déjà de parent
@@ -94,16 +92,13 @@ public class Player : MovingObject {
         List<Vector2> path = new List<Vector2>();
         if (found)
         {
-            
             Vector2 curr = target;
             while (curr != start)
             {
                 path.Insert(0, curr);
                 curr = parents[(int)curr.x][(int)curr.y];
             }
-          
             path.Insert(0, curr);
-           
             //on retourne le vecteur allant du point de départ vers la première étape du chemin
             return path[1] ;//on suppose que le joueur n'a pas cliqué sur le personnage
         }
@@ -122,9 +117,6 @@ public class Player : MovingObject {
         health = GameManager.instance.playerHealthPoints;
         score = GameManager.instance.score;
 
-        
-
-        //scoreText.text = "Score: " + GameManager.instance.score;
         posX = (int)this.transform.position.x;
         posY = (int)this.transform.position.y;
 
@@ -158,7 +150,7 @@ public class Player : MovingObject {
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) && !mousemovement) {
             mousemovement = true;
 			var posVec = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-           
+            //Debug.Log(Input.mousePosition);
 			var x = Mathf.RoundToInt(posVec.x) ;
 			var y = Mathf.RoundToInt (posVec.y);
             target = new Vector2(x, y);
@@ -199,6 +191,10 @@ public class Player : MovingObject {
             }
             AttemptMove<Wall>(posX + horizontal, posY + vertical);
         }
+        else
+        {
+            animator.SetTrigger("DontMove");
+        }
 
         CheckIfVictory();
     }
@@ -229,9 +225,7 @@ public class Player : MovingObject {
 	{
         if (this.transform.position.x != posX || this.transform.position.y != posY)
             return;
-        int horizontal = 0;
-        int vertical = 0;
-      
+
 		GameObject manager = GameObject.FindGameObjectWithTag ("manager");
 		TileType[][] tiles = manager.GetComponent<BoardCreator> ().getMap ();
         List<Enemy> enemies = manager.GetComponent<GameManager>().enemies;
@@ -245,9 +239,8 @@ public class Player : MovingObject {
             tiles = manager.GetComponent<BoardCreator>().getMap();
             Vector2 playerPos = new Vector2(posX, posY);
             Vector2 targetPos = new Vector2(target.x, target.y);
-        
             Vector2 nextPos = follow_simple(playerPos, targetPos, tiles);
-          
+
             if (nextPos != new Vector2(0f, 0f))
             {
                 AttemptMove<Wall>((int)nextPos.x, (int)nextPos.y);
@@ -272,50 +265,10 @@ public class Player : MovingObject {
             tiles[enemies[i].posX][enemies[i].posY] = TileType.Floor;
         }
     }
-			/*int horizontal = 0, vertical = 0;
-			x -= posX;
-			y -= posY;
-			if (Mathf.Abs(x) > Mathf.Abs(y)) {
-				horizontal = x > 0 ? 1 : -1;
-			} else {
-				vertical = y > 0 ? 1 : -1;
-			}
-
-			if (horizontal != 0)
-			vertical = 0;
-
-			if (horizontal != 0 || vertical != 0)
-			{
-				if(horizontal != 0)
-				{
-					if(horizontal>0)
-					{
-						animator.SetTrigger("MoveRight");
-					}
-					else
-					{
-						animator.SetTrigger("MoveLeft");
-					}
-				}
-				else
-				{
-					if (vertical > 0)
-					{
-						animator.SetTrigger("MoveUp");
-					}
-					else
-					{
-						animator.SetTrigger("MoveDown");
-					}
-				}
-				AttemptMove<Wall>(posX + horizontal, posY + vertical);*/
 
 	private void OnTriggerEnter2D (Collider2D other)
 	{
-		if (other.tag == "Exit") {
-			Invoke ("Restart", restartLevelDelay);
-			enabled = false;
-		} else if (other.tag == "Food") {
+        if (other.tag == "Food") {
             health += pointsPerFood;
             score += pointsPerFood;
 			SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
@@ -353,7 +306,8 @@ public class Player : MovingObject {
 	private void CheckIfGameOver()
 	{
 		if (health <= 0) {
-			SoundManager.instance.PlaySingle(gameOverSound);
+            healthText.text = "";
+            SoundManager.instance.PlaySingle(gameOverSound);
 			SoundManager.instance.musicSource.Stop();
 			GameManager.instance.GameOver ();
 		}
@@ -363,7 +317,8 @@ public class Player : MovingObject {
     {
         if (score >= 100)
         {
-            //SoundManager.instance.PlaySingle(victorySound);
+            healthText.text = "";
+            SoundManager.instance.PlaySingle(victorySound);
             SoundManager.instance.musicSource.Stop();
             GameManager.instance.Victory();
         }

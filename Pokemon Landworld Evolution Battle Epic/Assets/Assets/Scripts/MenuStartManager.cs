@@ -12,7 +12,6 @@ public class MenuStartManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Time.timeScale = 1;
 
         pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");            //gets all objects with tag ShowOnPause
 
@@ -43,6 +42,15 @@ public class MenuStartManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void Quit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     //controls the pausing of the scene

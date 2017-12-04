@@ -48,13 +48,7 @@ public class Enemy : MovingObject {
     {
 		if (start == target)
 			return target;
-        Debug.Log("start");
-        Debug.Log(start);
-        Debug.Log("target");
-        Debug.Log(target);
-        Debug.Log("length");
-        Debug.Log(map.Length);
-        Debug.Log(map[0].Length);
+
         //file des éléments en attente de traitement
         Queue queue = new Queue();
         //map des parents pour chaque case visitée
@@ -68,7 +62,6 @@ public class Enemy : MovingObject {
         queue.Enqueue(start);
         bool found = false;
         //tant que la file est pas vide et que l'on a pas trouvé de chemin
-        Debug.Log(parents[0][0]);
         while (queue.Count > 0 && !found)
         {
             Debug.Log(queue.Count);
@@ -103,16 +96,13 @@ public class Enemy : MovingObject {
         List<Vector2> path = new List<Vector2>();
         if (found)
         {
-            Debug.Log("found");
             Vector2 curr = target;
             while (curr != start)
             {
                 path.Insert(0, curr);
                 curr = parents[(int)curr.x][(int)curr.y];
             }
-            Debug.Log(path[0]);
             path.Insert(0, curr);
-            Debug.Log(path[0]);
             //on retourne le vecteur allant du point de départ vers la première étape du chemin
             if (path.Count > 1)
                 return path[1];//on suppose que le joueur n'a pas cliqué sur le personnage
