@@ -45,13 +45,7 @@ public class Player : MovingObject {
 
     Vector2 follow_simple(Vector2 start, Vector2 target, TileType[][] map)
     {
-        Debug.Log("start");
-        Debug.Log(start);
-        Debug.Log("target");
-        Debug.Log(target);
-        Debug.Log("length");
-        Debug.Log(map.Length);
-        Debug.Log(map[0].Length);
+      
         //file des éléments en attente de traitement
         Queue queue = new Queue();
         //map des parents pour chaque case visitée
@@ -65,10 +59,10 @@ public class Player : MovingObject {
         queue.Enqueue(start);
         bool found = false;
         //tant que la file est pas vide et que l'on a pas trouvé de chemin
-        Debug.Log(parents[0][0]);
+       
         while (queue.Count > 0 && !found)
         {
-            Debug.Log(queue.Count);
+           
             //on défile le premier élément et on le récupère
             Vector2 curr = (Vector2)queue.Dequeue();
             //on enfile les voisins si ce ne sont pas des murs et qu'ils n'ont pas déjà de parent
@@ -100,16 +94,16 @@ public class Player : MovingObject {
         List<Vector2> path = new List<Vector2>();
         if (found)
         {
-            Debug.Log("found");
+            
             Vector2 curr = target;
             while (curr != start)
             {
                 path.Insert(0, curr);
                 curr = parents[(int)curr.x][(int)curr.y];
             }
-            Debug.Log(path[0]);
+          
             path.Insert(0, curr);
-            Debug.Log(path[0]);
+           
             //on retourne le vecteur allant du point de départ vers la première étape du chemin
             return path[1] ;//on suppose que le joueur n'a pas cliqué sur le personnage
         }
@@ -128,7 +122,7 @@ public class Player : MovingObject {
         health = GameManager.instance.playerHealthPoints;
         score = GameManager.instance.score;
 
-        healthText.text = "Health: " + health;
+        
 
         //scoreText.text = "Score: " + GameManager.instance.score;
         posX = (int)this.transform.position.x;
@@ -164,7 +158,7 @@ public class Player : MovingObject {
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) && !mousemovement) {
             mousemovement = true;
 			var posVec = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //Debug.Log(Input.mousePosition);
+           
 			var x = Mathf.RoundToInt(posVec.x) ;
 			var y = Mathf.RoundToInt (posVec.y);
             target = new Vector2(x, y);
@@ -237,8 +231,7 @@ public class Player : MovingObject {
             return;
         int horizontal = 0;
         int vertical = 0;
-        Debug.Log (target.x);
-		Debug.Log (target.y);
+      
 		GameObject manager = GameObject.FindGameObjectWithTag ("manager");
 		TileType[][] tiles = manager.GetComponent<BoardCreator> ().getMap ();
         List<Enemy> enemies = manager.GetComponent<GameManager>().enemies;
@@ -252,10 +245,9 @@ public class Player : MovingObject {
             tiles = manager.GetComponent<BoardCreator>().getMap();
             Vector2 playerPos = new Vector2(posX, posY);
             Vector2 targetPos = new Vector2(target.x, target.y);
-            Debug.Log("debut pathfinding");
+        
             Vector2 nextPos = follow_simple(playerPos, targetPos, tiles);
-            Debug.Log("path found");
-            Debug.Log(nextPos);
+          
             if (nextPos != new Vector2(0f, 0f))
             {
                 AttemptMove<Wall>((int)nextPos.x, (int)nextPos.y);

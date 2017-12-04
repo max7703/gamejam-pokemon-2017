@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.IO;
@@ -336,3 +336,4 @@ public class TileWindow : EditorWindow
 		SceneView.RepaintAll();
 	}
 }
+*/
